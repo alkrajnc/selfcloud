@@ -1,6 +1,5 @@
 import { DataTable } from "@/components/ui/data-table";
 import { api } from "@/trpc/server";
-import { useParams } from "next/navigation";
 import { columns } from "@/app/_components/file";
 import React from "react";
 
@@ -29,7 +28,7 @@ const SlugFolder = async ({ params }: { params: { slug: string } }) => {
           </BreadcrumbItem>
           <BreadcrumbSeparator />
           <BreadcrumbItem>
-            <BreadcrumbPage>{folderInfo?.name}</BreadcrumbPage>
+            <BreadcrumbPage>{folderInfo?.watcherName}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>

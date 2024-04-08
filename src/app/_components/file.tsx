@@ -13,22 +13,19 @@ import {
 import { MoreHorizontal } from "lucide-react";
 
 interface FileProps {
-  name: string;
-  filePath: string;
-  createdAt: Date;
-  modifiedAt: Date;
-  size: number;
   isFile: boolean;
-  isFolder: boolean;
-  extensions: string;
+  fileName: string;
+  createTimestamp: Date;
+  modifyTimestamp: Date;
+  fileSize: number;
+  watcherID: number;
+  insertTimestamp: Date;
 }
 
 export const columns: ColumnDef<FileProps>[] = [
   {
     id: "action",
     cell: ({ row }) => {
-      const payment = row.original;
-
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -53,14 +50,14 @@ export const columns: ColumnDef<FileProps>[] = [
   },
 
   {
-    accessorKey: "name",
+    accessorKey: "fileName",
     header: "Name",
   },
   {
-    accessorKey: "createdAt",
+    accessorKey: "createTimestamp",
     header: "Created",
     cell: ({ row }) => {
-      const date: string = row.getValue("createdAt");
+      const date: string = row.getValue("createTimestamp");
       const formatted = new Date(date);
       return (
         <div className="text-left">{`${formatted.getDate()}. ${formatted.getMonth() + 1}. ${formatted.getFullYear()} ${formatted.getHours()}:${formatted.getMinutes()}:${formatted.getSeconds()}`}</div>
@@ -68,10 +65,10 @@ export const columns: ColumnDef<FileProps>[] = [
     },
   },
   {
-    accessorKey: "modifiedAt",
+    accessorKey: "modifyTimestamp",
     header: "Modified",
     cell: ({ row }) => {
-      const date: string = row.getValue("modifiedAt");
+      const date: string = row.getValue("modifyTimestamp");
       const formatted = new Date(date);
       return (
         <div className="text-left">{`${formatted.getDate()}. ${formatted.getMonth() + 1}. ${formatted.getFullYear()} ${formatted.getHours()}:${formatted.getMinutes()}:${formatted.getSeconds()}`}</div>
@@ -79,17 +76,13 @@ export const columns: ColumnDef<FileProps>[] = [
     },
   },
   {
-    accessorKey: "size",
+    accessorKey: "fileSize",
     header: "Size",
     cell: ({ row }) => {
-      const size: string = row.getValue("size");
+      const size: string = row.getValue("fileSize");
       const formatted =
         Math.round((Number(size) / 1000000) * 1000) / 1000 + " MB";
       return <div className="text-left">{formatted}</div>;
     },
-  },
-  {
-    accessorKey: "extensions",
-    header: "Extension",
   },
 ];

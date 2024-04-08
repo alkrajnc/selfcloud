@@ -5,6 +5,17 @@
 await import("./src/env.js");
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "uinstruktor.sers.si",
+        port: "",
+        pathname: "/cloud/**",
+      },
+    ],
+  },
+};
 
 export default config;

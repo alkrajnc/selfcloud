@@ -3,5 +3,5 @@ export default function CloudLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <section className="p-24">{children}</section>;
+  return <section className="p-4 md:p-24">{children}</section>;
 }
