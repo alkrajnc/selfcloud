@@ -3,6 +3,7 @@ import { Progress } from "@/components/ui/progress";
 import { Database, Folder, FolderSync } from "lucide-react";
 import Link from "next/link";
 import Client from "./_components/client";
+import SettingsDropdown from "./_components/settings-dropdown";
 
 export default async function Home() {
   const data = await api.cloud.getInfo();
@@ -10,9 +11,9 @@ export default async function Home() {
   const clients = await api.clients.getClients();
 
   return (
-    <main className="flex h-full min-h-screen flex-col p-2 md:p-16">
+    <main className="relative flex h-full min-h-screen flex-col p-2 pt-12 md:p-16">
       <div className="m-4 grid w-full grid-cols-1 gap-4 self-center md:aspect-square md:grid-cols-3 md:grid-rows-3 lg:w-2/3 xl:w-1/2">
-        <div className="relative row-span-3 overflow-hidden rounded-xl border border-neutral-200 p-4 md:col-span-1 md:row-span-2 ">
+        <div className="relative row-span-3 min-h-[200px] overflow-hidden rounded-xl border border-neutral-200 p-4 md:col-span-1 md:row-span-2 ">
           <h3 className="text-3xl font-medium text-accent-foreground/60">
             Files Synced
           </h3>
@@ -32,7 +33,7 @@ export default async function Home() {
             />
           </div>
         </div>
-        <div className="relative flex flex-col justify-between gap-2 overflow-hidden rounded-xl border border-neutral-200 p-4 md:col-span-2 md:row-span-1">
+        <div className="relative flex min-h-[200px] flex-col justify-between gap-2 overflow-hidden rounded-xl border border-neutral-200 p-4 md:col-span-2 md:row-span-1">
           <div>
             <h3 className="text-3xl font-medium text-accent-foreground/60">
               Storage Used
@@ -95,6 +96,9 @@ export default async function Home() {
             ))}
           </div>
         </div>
+      </div>
+      <div className="absolute right-4 top-4 md:right-16 md:top-16">
+        <SettingsDropdown />
       </div>
     </main>
   );
