@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-non-null-asserted-optional-chain */
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
+// import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import {
   getServerSession,
   type DefaultSession,
   type NextAuthOptions,
 } from "next-auth";
-import { type Adapter } from "next-auth/adapters";
+// import { type Adapter } from "next-auth/adapters";
 import CredentialsProvider from "next-auth/providers/credentials";
 
 // import { env } from "@/env";
 import { db } from "@/server/db";
-import { createTable, users } from "@/server/db/schema";
+import { users } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { pbkdf2Sync } from "crypto";
 
@@ -24,15 +24,16 @@ declare module "next-auth" {
   interface Session extends DefaultSession {
     user: {
       id: string;
+      access_token: string;
       // ...other properties
       // role: UserRole;
     } & DefaultSession["user"];
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    access_token: string;
+    username: string;
+  }
 }
 
 /**
@@ -42,18 +43,26 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    async jwt({ token, user, account, profile }) {
+      if (account) {
+        token.accessToken = account.access_token;
+        token.name = user.username;
+      }
+      return token;
+    },
+    async session({ session }) {
+      return { ...session };
+    },
   },
-  /*   session: {
+  session: {
     strategy: "jwt",
-  }, */
-  adapter: DrizzleAdapter(db, createTable) as Adapter,
+    maxAge: 24 * 60 * 60, // 1 day
+    updateAge: 24 * 60 * 60, // 24 hours
+    /* generateSessionToken: () => {
+      return randomUUID?.() ?? randomBytes(32).toString("hex");
+    },  */
+  },
+  // adapter: DrizzleAdapter(db, createTable) as Adapter,
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout",

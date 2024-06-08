@@ -25,7 +25,7 @@ const Folders = async () => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <div className="grid grid-cols-6 gap-6 py-4">
+      <div className="grid grid-cols-1 gap-6 py-4 md:grid-cols-6">
         {watchers.map((watcher, idx) => {
           return (
             <Folder

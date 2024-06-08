@@ -14,7 +14,12 @@ export const createTable = mysqlTableCreator((name) => `${name}`);
 export const watcher = mysqlTable("watcher", {
   watcherID: int("watcher_id").primaryKey().autoincrement(),
   watcherName: varchar("watcher_name", { length: 255 }).notNull(),
-  watcherPath: varchar("watcher_path", { length: 4096 }).notNull(),
+  watcherPath: varchar("watcher_path", { length: 4096 }),
+  clientID: int("client_id")
+    .notNull()
+    .references(() => {
+      return clients.clientID;
+    }),
 });
 
 export const files = mysqlTable("files", {
@@ -34,6 +39,8 @@ export const clients = mysqlTable("clients", {
   clientID: int("client_id").primaryKey().autoincrement(),
   clientName: varchar("client_name", { length: 255 }).notNull(),
   clientLastSeen: timestamp("client_last_seen").notNull(),
+  clientAuthToken: varchar("client_auth_token", { length: 255 }).notNull(),
+  clientPlatform: varchar("client_platform", { length: 255 }).notNull(),
 });
 
 export const users = mysqlTable("user", {
@@ -46,6 +53,7 @@ export const users = mysqlTable("user", {
     fsp: 3,
   }).defaultNow(),
   image: varchar("image", { length: 255 }),
+  username: varchar("name", { length: 255 }),
 });
 
 export const accounts = mysqlTable(

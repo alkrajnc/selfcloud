@@ -1,7 +1,7 @@
 "use client";
 import { signIn } from "next-auth/react";
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -31,6 +31,8 @@ const formSchema = z.object({
 const SignInForm = () => {
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl");
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -41,7 +43,6 @@ const SignInForm = () => {
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
     await signIn("credentials", {
       email: values.email,
       password: values.password,
@@ -51,13 +52,15 @@ const SignInForm = () => {
         // console.error("Failed to sign in", response?.error);
         setError("Wrong password or email. Please try again.");
       } else {
-        router.push("/");
+        router.push(
+          "/" + callbackUrl?.split("/").slice(3).join("/") ?? "/dashboard",
+        );
       }
     });
   }
 
   return (
-    <div className="flex flex-col items-center gap-4 rounded-lg border border-neutral-100 p-12 shadow">
+    <div className="flex min-w-[20vw] flex-col items-center gap-4 rounded-lg border border-neutral-100 p-12 shadow">
       {error && <p className="font-medium text-red-400">{error}</p>}
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>

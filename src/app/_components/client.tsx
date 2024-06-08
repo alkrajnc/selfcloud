@@ -1,4 +1,4 @@
-import { MoreHorizontal, Workflow } from "lucide-react";
+import { Computer, MoreHorizontal, Smartphone, Workflow } from "lucide-react";
 import React from "react";
 import {
   DropdownMenu,
@@ -9,18 +9,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 interface ClientProps {
   clientId: number;
   clientName: string;
+  clientType: "windows" | "linux" | "android";
 }
 
-const Client = ({ clientId, clientName }: ClientProps) => {
+const Client = ({ clientName, clientType, clientId }: ClientProps) => {
   return (
     <DropdownMenu>
       <div className="flex flex-row items-center justify-between gap-4 p-4  hover:bg-secondary">
         <div className="flex flex-row items-center gap-2">
-          <Workflow />
+          {clientType === "windows" ? (
+            <Computer />
+          ) : clientType === "linux" ? (
+            <Computer />
+          ) : (
+            <Smartphone />
+          )}
           <span>{clientName}</span>
         </div>
         <DropdownMenuTrigger>
@@ -28,11 +36,12 @@ const Client = ({ clientId, clientName }: ClientProps) => {
         </DropdownMenuTrigger>
       </div>
       <DropdownMenuContent>
-        <DropdownMenuItem>View</DropdownMenuItem>
-        <DropdownMenuItem>Edit</DropdownMenuItem>
-        <DropdownMenuSeparator />
-        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuItem>Delete</DropdownMenuItem>
+        <DropdownMenuItem>
+          <Link href={`/client/${clientId}`}>View</Link>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <span className="cursor-pointer text-red-500">Delete</span>
+        </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );

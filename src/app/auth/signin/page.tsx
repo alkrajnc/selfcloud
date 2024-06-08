@@ -7,16 +7,11 @@ import React, { useState } from "react";
 
 const SignInPage = async () => {
   const session = await getServerSession();
-
   if (session) {
     redirect("/");
   }
 
-  return (
-    <div className="grid h-screen w-screen items-center justify-center">
-      <SignInForm />
-    </div>
-  );
+  return <SignInForm />;
 };
 
 export default SignInPage;

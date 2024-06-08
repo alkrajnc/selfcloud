@@ -26,6 +26,7 @@ export const columns: ColumnDef<FileProps>[] = [
   {
     id: "action",
     cell: ({ row }) => {
+      const fileName: string = row.getValue("fileName");
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -38,7 +39,15 @@ export const columns: ColumnDef<FileProps>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
 
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Download</DropdownMenuItem>
+            <DropdownMenuItem>
+              <a
+                href={`https://uinstruktor.sers.si/cloud/${fileName}`}
+                download
+                target="_blank"
+              >
+                Download
+              </a>
+            </DropdownMenuItem>
             <DropdownMenuItem>Properties</DropdownMenuItem>
             <DropdownMenuItem className="text-red-500 hover:font-medium hover:text-red-500">
               Delete file

@@ -129,7 +129,7 @@ export function DataTable<TData, TValue>({
       </div>
       <DialogContent className=" h-screen w-screen border-0 bg-transparent">
         <Image
-          src={`https://uinstruktor.sers.si/cloud/snap_saved/${selectedUrl}`}
+          src={`https://uinstruktor.sers.si/cloud/${selectedUrl}`}
           fill
           style={{
             objectFit: "contain",
