@@ -11,10 +11,11 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getFolderData, getFolderInfo } from "@/server/api";
 
 const SlugFolder = async ({ params }: { params: { slug: string } }) => {
-  const data = await api.cloud.getFolderData(params.slug);
-  const folderInfo = (await api.cloud.getFolderInfo(params.slug))[0];
+  const data = await getFolderData(params.slug);
+  const folderInfo = await getFolderInfo(params.slug);
   return (
     <div>
       <Breadcrumb>

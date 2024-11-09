@@ -4,9 +4,9 @@ import { env } from "@/env";
 
 export default {
   schema: "./src/server/db/schema.ts",
-  driver: "mysql2",
+  dialect: "mysql",
   dbCredentials: {
-    uri: env.DATABASE_URL,
+    url: env.DATABASE_URL,
   },
-  tablesFilter: ["cloud-next_*"],
+  tablesFilter: ["selfcloud_*"],
 } satisfies Config;

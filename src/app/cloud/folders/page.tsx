@@ -9,9 +9,10 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
+import { getFolders } from "@/server/api";
 
 const Folders = async () => {
-  const watchers = await api.cloud.getFolders();
+  const watchers = await getFolders();
   return (
     <div>
       <Breadcrumb>
@@ -32,7 +33,7 @@ const Folders = async () => {
               key={idx}
               watcherName={watcher.watcherName}
               watcherID={watcher.watcherID}
-              watcherPath={watcher.watcherPath}
+              watcherPath={watcher.watcherPath!}
               folderSize={watcher.folderSize}
             />
           );
