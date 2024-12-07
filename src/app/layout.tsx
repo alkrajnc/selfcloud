@@ -24,7 +24,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`dark  ${inter.className}`}>
         <TRPCReactProvider>
-          <div className="">{children}</div>
+          <div className="h-full">{children}</div>
         </TRPCReactProvider>
       </body>
     </html>

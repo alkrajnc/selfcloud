@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "a6d6cad1-16f2-4646-ba0b-d2263c5d5136",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "6d79f8a8-259a-49c1-a525-dd49f1a0adb2",
+  "prevId": "90b68029-be19-42c0-a5ba-7c463426d93b",
   "tables": {
     "account": {
       "name": "account",
@@ -113,6 +113,85 @@
       "uniqueConstraints": {},
       "checkConstraint": {}
     },
+    "actions": {
+      "name": "actions",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "type": {
+          "name": "type",
+          "type": "enum('create','update','delete')",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "timestamp": {
+          "name": "timestamp",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fileId": {
+          "name": "fileId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "userId": {
+          "name": "userId",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "actions_fileId_files_id_fk": {
+          "name": "actions_fileId_files_id_fk",
+          "tableFrom": "actions",
+          "tableTo": "files",
+          "columnsFrom": [
+            "fileId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "actions_userId_user_id_fk": {
+          "name": "actions_userId_user_id_fk",
+          "tableFrom": "actions",
+          "tableTo": "user",
+          "columnsFrom": [
+            "userId"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "actions_id": {
+          "name": "actions_id",
+          "columns": [
+            "id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraint": {}
+    },
     "clients": {
       "name": "clients",
       "columns": {
@@ -168,8 +247,15 @@
     "files": {
       "name": "files",
       "columns": {
-        "file_name": {
-          "name": "file_name",
+        "id": {
+          "name": "id",
+          "type": "int",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": true
+        },
+        "name": {
+          "name": "name",
           "type": "varchar(255)",
           "primaryKey": false,
           "notNull": true,
@@ -209,40 +295,26 @@
           "primaryKey": false,
           "notNull": true,
           "autoincrement": false
-        },
-        "watcher_id": {
-          "name": "watcher_id",
-          "type": "int",
-          "primaryKey": false,
-          "notNull": true,
-          "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "files_watcher_id_watcher_watcher_id_fk": {
-          "name": "files_watcher_id_watcher_watcher_id_fk",
-          "tableFrom": "files",
-          "tableTo": "watcher",
-          "columnsFrom": [
-            "watcher_id"
-          ],
-          "columnsTo": [
-            "watcher_id"
-          ],
-          "onDelete": "no action",
-          "onUpdate": "no action"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
-        "files_file_name": {
-          "name": "files_file_name",
+        "files_id": {
+          "name": "files_id",
           "columns": [
-            "file_name"
+            "id"
           ]
         }
       },
-      "uniqueConstraints": {},
+      "uniqueConstraints": {
+        "files_name_unique": {
+          "name": "files_name_unique",
+          "columns": [
+            "name"
+          ]
+        }
+      },
       "checkConstraint": {}
     },
     "session": {

@@ -1,6 +1,7 @@
 import {
   bigint,
   boolean,
+  mysqlEnum,
   mysqlTableCreator,
   primaryKey,
   timestamp,
@@ -8,6 +9,7 @@ import {
 } from "drizzle-orm/mysql-core";
 import { int, mysqlTable } from "drizzle-orm/mysql-core";
 import type { AdapterAccount } from "@auth/core/adapters";
+import { relations } from "drizzle-orm";
 
 export const createTable = mysqlTableCreator((name) => `${name}`);
 
@@ -23,6 +25,37 @@ export const watcher = mysqlTable("watcher", {
 });
 
 export const files = mysqlTable("files", {
+  id: int("id").primaryKey().autoincrement(),
+  name: varchar("name", { length: 255 }).notNull().unique(),
+  size: bigint("file_size", { mode: "number" }).notNull(),
+  isFile: boolean("is_file").notNull(),
+  modifyTimestamp: timestamp("modify_timestamp").notNull(),
+  createTimestamp: timestamp("create_timestamp").notNull(),
+  insertTimestamp: timestamp("insert_timestamp").notNull(),
+});
+
+export const fileRelations = relations(files, ({ one }) => ({
+  actions: one(actions, { fields: [files.id], references: [actions.fileId] }),
+}));
+
+const actionsEnum = mysqlEnum(["create", "update", "delete"]);
+
+export const actions = mysqlTable("actions", {
+  id: int("id").primaryKey().autoincrement(),
+  type: actionsEnum.notNull(),
+  timestamp: timestamp().notNull(),
+  fileId: int("fileId").notNull().references(() => files.id),
+  userId: int("userId").notNull().references(() => users.id),
+});
+
+export const actionRelation = relations(actions, ({ one }) => ({
+  user: one(users, {
+    fields: [actions.id],
+    references: [users.id],
+  }),
+}));
+
+/* export const files = mysqlTable("files", {
   fileName: varchar("file_name", { length: 255 }).primaryKey(),
   fileSize: bigint("file_size", { mode: "number" }).notNull(),
   isFile: boolean("is_file").notNull(),
@@ -34,7 +67,7 @@ export const files = mysqlTable("files", {
     .references(() => {
       return watcher.watcherID;
     }),
-});
+}); */
 export const clients = mysqlTable("clients", {
   clientID: int("client_id").primaryKey().autoincrement(),
   clientName: varchar("client_name", { length: 255 }).notNull(),
@@ -101,3 +134,6 @@ export const verificationTokens = mysqlTable(
     compoundKey: primaryKey({ columns: [vt.identifier, vt.token] }),
   }),
 );
+
+export type SelectFolder = typeof files.$inferSelect;
+export type InsertFolder = typeof files.$inferInsert;

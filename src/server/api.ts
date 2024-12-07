@@ -1,6 +1,6 @@
 import { count, eq, sql, sum } from "drizzle-orm";
 import { db } from "./db";
-import { clients, files, watcher } from "./db/schema";
+import { clients, files, files, watcher } from "./db/schema";
 
 const getInfo = async () => {
     const info = await db
@@ -18,17 +18,9 @@ const getClients = async () => {
     return clientList;
 };
 const getFolders = async () => {
-    const folders = await db
-        .select({
-            watcherID: watcher.watcherID,
-            watcherName: watcher.watcherName,
-            watcherPath: watcher.watcherPath,
-            folderSize: sql<number>`sum(${files.fileSize})`,
-        })
-        .from(watcher)
-        .leftJoin(files, eq(watcher.watcherID, files.watcherID))
-        .groupBy(watcher.watcherID);
-    return folders;
+    const folderData = await db.select().from(files);
+
+    return folderData;
 };
 
 const getFolderData = async (watcherID: string) => {
