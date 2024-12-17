@@ -7,12 +7,13 @@ import {
 } from "next-auth";
 // import { type Adapter } from "next-auth/adapters";
 import CredentialsProvider from "next-auth/providers/credentials";
-
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 // import { env } from "@/env";
 import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { accounts, users } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { pbkdf2Sync } from "crypto";
+import { DefaultJWT, JWT } from "next-auth/jwt";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -22,17 +23,10 @@ import { pbkdf2Sync } from "crypto";
  */
 declare module "next-auth" {
   interface Session extends DefaultSession {
-    user: {
-      id: string;
-      access_token: string;
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession["user"];
+    user: { id: string; email: string; name: string };
   }
-
-  interface User {
-    access_token: string;
-    username: string;
+  interface JWTE extends JWT {
+    id: string;
   }
 }
 
@@ -43,26 +37,30 @@ declare module "next-auth" {
  */
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    async jwt({ token, user, account, profile }) {
-      if (account) {
-        token.accessToken = account.access_token;
-        token.name = user.username;
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
       }
+
       return token;
     },
-    async session({ session }) {
-      return { ...session };
+    async session({ session, token, user }) {
+      if (token) {
+        session.user.id = token.id as string;
+      }
+      return session;
     },
   },
   session: {
     strategy: "jwt",
     maxAge: 24 * 60 * 60, // 1 day
     updateAge: 24 * 60 * 60, // 24 hours
+
     /* generateSessionToken: () => {
       return randomUUID?.() ?? randomBytes(32).toString("hex");
     },  */
   },
-  // adapter: DrizzleAdapter(db, createTable) as Adapter,
+  // adapter: DrizzleAdapter(db),
   pages: {
     signIn: "/auth/signin",
     signOut: "/auth/signout",
@@ -78,23 +76,25 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials, req) {
-        const user = await db
-          .select()
-          .from(users)
-          .where(eq(users.email, credentials!.email))
-          .limit(1);
-        if (user.length === 0) {
+        if (!credentials) {
+          return null;
+        }
+        const user = await db.query.users.findFirst({
+          where: (users, { eq }) => eq(users.email, credentials.email),
+        });
+        if (!user) {
           return null;
         }
         const hash = pbkdf2Sync(
           credentials?.password!,
-          user[0]?.salt!,
+          user.salt,
           10000,
           64,
           "sha512",
         ).toString("hex");
-        if (hash === user[0]?.password) {
-          return user[0];
+
+        if (hash === user?.password) {
+          return { id: user.id, email: user.email, name: user.name };
         }
 
         return null;

@@ -3,10 +3,38 @@
   "dialect": "mysql",
   "entries": [
     {
+      "idx": 0,
+      "version": "5",
+      "when": 1734037527833,
+      "tag": "0000_tidy_amphibian",
+      "breakpoints": true
+    },
+    {
       "idx": 1,
       "version": "5",
-      "when": 1733484063084,
-      "tag": "0001_odd_the_captain",
+      "when": 1734117517081,
+      "tag": "0001_glossy_crusher_hogan",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "5",
+      "when": 1734171078549,
+      "tag": "0002_dapper_killmonger",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1734178803716,
+      "tag": "0003_confused_darwin",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1734195840529,
+      "tag": "0004_first_mystique",
       "breakpoints": true
     }
   ]

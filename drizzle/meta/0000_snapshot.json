@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "535e3795-fbc1-4801-9ef2-efe15bb10001",
-  "prevId": "60fafed0-48a8-4ad4-b513-3a979a03b796",
+  "id": "60fafed0-48a8-4ad4-b513-3a979a03b796",
+  "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "account": {
       "name": "account",
@@ -155,46 +155,19 @@
           "name": "fileId",
           "type": "int",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         },
         "userId": {
           "name": "userId",
-          "type": "varchar(255)",
+          "type": "int",
           "primaryKey": false,
-          "notNull": true,
+          "notNull": false,
           "autoincrement": false
         }
       },
       "indexes": {},
-      "foreignKeys": {
-        "actions_fileId_files_id_fk": {
-          "name": "actions_fileId_files_id_fk",
-          "tableFrom": "actions",
-          "tableTo": "files",
-          "columnsFrom": [
-            "fileId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
-        },
-        "actions_userId_user_id_fk": {
-          "name": "actions_userId_user_id_fk",
-          "tableFrom": "actions",
-          "tableTo": "user",
-          "columnsFrom": [
-            "userId"
-          ],
-          "columnsTo": [
-            "id"
-          ],
-          "onDelete": "cascade",
-          "onUpdate": "cascade"
-        }
-      },
+      "foreignKeys": {},
       "compositePrimaryKeys": {
         "actions_id": {
           "name": "actions_id",

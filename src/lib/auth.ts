@@ -1,22 +1,19 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
-/* eslint-disable @typescript-eslint/no-unsafe-member-access */
-import { db } from "@/server/db";
-import { clients } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+"use client";
+import { Session } from "next-auth";
+import { getSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 
-export async function checkClientSecret(request: Request) {
-  if (
-    !request.headers.get("X-Client-Id") ||
-    !request.headers.get("X-Client-Secret")
-  ) {
-    return false;
-  }
-  const client = await db
-    .select()
-    .from(clients)
-    .where(eq(clients.clientID, Number(request.headers.get("X-Client-Id"))));
-  if (client[0]?.clientAuthToken === request.headers.get("X-Client-Secret")) {
-    return true;
-  }
-  return false;
+export function useSession() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    const fetchSession = async () => {
+      setSession(await getSession());
+      setLoading(false);
+    };
+    fetchSession();
+  }, []);
+
+  return { session, loading };
 }

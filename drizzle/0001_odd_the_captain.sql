@@ -1,2 +1,0 @@
-ALTER TABLE `actions` ADD `userId` int NOT NULL;--> statement-breakpoint
-ALTER TABLE `actions` ADD CONSTRAINT `actions_userId_user_id_fk` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE no action ON UPDATE no action;
