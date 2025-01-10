@@ -27,7 +27,7 @@ const Photo = ({ photo }: PhotoProps) => {
     <div className="w-max shadow-white hover:drop-shadow-xl">
       <Link href={"/"}>
         <Image
-          src={`/api/cloud/photos?id=${photo.id}`}
+          src={`/api/cloud/photo?id=${photo.id}`}
           className="rounded-sm transition"
           placeholder={photo.blurhash ? "blur" : "empty"}
           style={{

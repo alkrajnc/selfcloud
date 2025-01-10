@@ -6,6 +6,8 @@ import { readFile } from "fs/promises";
 import { NextRequest, NextResponse } from "next/server";
 import path from "path";
 
+import sharp from "sharp";
+
 export async function GET(req: NextRequest, res: NextResponse) {
   /*  const session = getServerAuthSession();
   if (!session) {
@@ -14,6 +16,8 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
   const searchParams = req.nextUrl.searchParams;
   const id = searchParams.get("id");
+  const width = Math.floor(Number(searchParams.get("w")));
+  const height = Math.floor(Number(searchParams.get("h")));
   if (!id) {
     return NextResponse.json("id not found");
   }
@@ -26,7 +30,15 @@ export async function GET(req: NextRequest, res: NextResponse) {
     `${process.env.FILE_LOCATION}/photos/${image?.name}`,
   );
 
-  return new Response(data, {
+  const optimizedImage = await sharp(data)
+    .resize({
+      kernel: "nearest",
+      width: width > 0 ? width : image?.dimensionX,
+      height: height > 0 ? height : image?.dimensionY,
+    })
+    .toBuffer();
+
+  return new Response(optimizedImage, {
     headers: { "content-type": "image/png" },
   });
 }

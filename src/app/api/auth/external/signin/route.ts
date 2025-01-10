@@ -2,34 +2,7 @@ import { db } from "@/server/db";
 import { pbkdf2Sync } from "crypto";
 import { NextResponse } from "next/server";
 import * as jose from "jose";
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  image: string;
-}
-
-const signToken = async (user: User) => {
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-  const token = await new jose.SignJWT({ user })
-    .setProtectedHeader({ alg: "HS256" })
-    .setIssuedAt()
-    .setIssuer("selfcloud")
-    .setExpirationTime("24h")
-    .sign(secret);
-
-  return token;
-};
-
-const verifyToken = async (token: string) => {
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET!);
-  const verified = await jose.jwtVerify(token, secret, { issuer: "selfcloud" });
-  if (verified.payload && verified.protectedHeader) {
-    return true;
-  }
-  return false;
-};
+import { signToken } from "@/lib/crypto";
 
 export async function POST(req: Request) {
   const { email, password } = (await req.json()) as {
